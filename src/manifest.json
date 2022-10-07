@@ -1,0 +1,50 @@
+{
+	"mver": "1.2.0",
+	"control": {
+		"identity": {
+			"name": "MyTableCustomWebControl",
+			"version": "1.0",
+			"displayname": "My table CustomWebControl",
+			"icon": "./assets/siemens.ico",
+			"type": "guid://B43A7557-2BF8-4F69-B0F2-D15F9A54F65C",
+			"start": "./control/index.html"
+		},
+		"metadata": {
+			"author": "Siemens",
+			"keywords": [
+				"Template",
+				"Table"
+			]
+		},
+		"contracts": {
+			"api": {
+				"methods": {
+					"DrawTable": {
+						"parameters": {
+							"columStyleString": {
+								"type": "string"
+							},
+							"tableDataString": {
+								"type": "string"
+							}
+						},
+						"description": "Manual way to draw the Table"
+					}
+				},
+				"events": {},
+				"properties": {
+					"TableDataString": {
+						"type": "string",
+						"default": "[{\"name\":\"Donald\",\"salary\":\"2200\"}]"
+					},
+					"ColumnStyleString" :{
+						"type": "string",
+						"default": "[{\"title\":\"Name\", \"field\":\"name\", \"sorter\":\"string\", \"width\":150},{\"title\":\"Salary\", \"field\":\"salary\", \"sorter\":\"number\", \"hozAlign\":\"left\"}]"
+
+					}
+				}
+			}
+		},
+		"types": {}
+	}
+}

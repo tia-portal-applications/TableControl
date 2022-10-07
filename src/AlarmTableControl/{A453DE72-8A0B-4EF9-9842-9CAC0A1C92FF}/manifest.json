@@ -1,0 +1,54 @@
+{
+	"mver": "1.2.0",
+	"control": {
+		"identity": {
+			"name": "CustomAlarmControl",
+			"version": "1.0",
+			"displayname": "Custom alarm control",
+			"icon": "./assets/siemens.ico",
+			"type": "guid://A453DE72-8A0B-4EF9-9842-9CAC0A1C92FF",
+			"start": "./control/index.html"
+		},
+		"metadata": {
+			"author": "Siemens",
+			"keywords": [
+				"Alarm"
+			]
+		},
+		"contracts": {
+			"api": {
+				"methods": {
+					"AlarmRaised": {
+						"parameters": {
+							"id": {
+								"type": "number"
+							},
+							"name": {
+								"type": "string"
+							},
+							"text": {
+								"type": "string"
+							},
+							"state": {
+								"type": "number"
+							}
+						},
+						"description": "Any raised HMI alarms should be put in here"
+					}
+				},
+				"events": {
+					"AcknowledgeAlarm": {
+						"arguments": {
+							"name": {
+								"type": "string"
+							}
+						},
+						"description": "Whenever an alarm should be acknowledged by the custom alarm control this event is raised"
+					}
+				},
+				"properties": {}
+			}
+		},
+		"types": {}
+	}
+}

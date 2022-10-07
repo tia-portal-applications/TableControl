@@ -1,0 +1,8 @@
+[{"title":"Name", "field":"name", "sorter":"string", "width":150, "headerFilter":"input"},{"title":"Salary", "field":"salary", "sorter":"number", "formatter":"progress", "formatterParams":{"min":0, "max":10000}, "hozAlign":"left"}, {"title":"onvacation", "field":"onvacation", "formatter":"tickCross", "width":150}, {"title":"Rating", "field":"rating", "formatter":"star", "hozAlign":"center", "headerFilter":true, "width":200}]
+
+[{"name":"Donald","salary":"2000","onvacation":"true", "rating":4},{"name":"Mickey","salary":"2100","onvacation":"false", "rating":2},{"name":"Goofey","salary":"2300","onvacation":"true", "rating":4},{"name":"Pluto","salary":"2300","onvacation":"true", "rating":1},{"name":"Dagobert","salary":"50000","onvacation":"false", "rating":5}]
+
+
+[{"title":"Name", "field":"name", "sorter":"string", "width":150},{"title":"Salary", "field":"salary", "sorter":"number", "hozAlign":"left"}, {"title":"Intern", "field":"intern", "sorter":"boolean", "hozAlign":"left"}]
+
+[{"name":"Jan","salary":"2000","intern":"true"}, {"name":"Max","salary":"2100","intern":"true"},...]

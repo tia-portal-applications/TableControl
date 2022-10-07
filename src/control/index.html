@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang='en' style="height: 100%;">
+
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+	<script src='webcc.min.js'></script> <!-- mandatory dependency -->
+	<!--Tabulator-->
+	<script type="text/javascript" src="./dist/js/tabulator.min.js"></script>
+	<link href="./dist/css/tabulator.css" rel="stylesheet">
+
+
+	<script src='./webcc.min.js'></script> <!-- mandatory dependency -->
+
+
+</head>
+
+<body style="height: 100%; margin: 0;">
+	<div id="example-table"></div>
+	<script>
+
+		let ArrayData = [];
+		var columnStyle_ = null;
+		var tableData_ = null;
+
+		////////////////////////////////////////////
+		// Initialize the custom control (without a successful initialization, the CWC will remain empty. Make sure to include the webcc.min.js script!)
+		WebCC.start(
+			// callback function; occurs when the connection is done or failed. 
+			// "result" is a boolean defining if the connection was successfull or not.
+			function (result) {
+				if (result) {
+					if (WebCC.isDesignMode) {
+						ArrayData = JSON.parse("[{\"name\":\"Donald\",\"salary\":\"2000\"},{\"name\":\"Mickey\",\"salary\":\"2100\"}]");
+						WebCC.Properties.ColumnStyleString = "[{\"title\":\"Name\", \"field\":\"name\", \"sorter\":\"string\", \"width\":150},{\"title\":\"Salary\", \"field\":\"salary\", \"sorter\":\"number\", \"hozAlign\":\"left\"}]";
+						drawTable(true);
+					}
+					else {
+						console.log('connected successfully');
+						// Set current values when CWC shows up
+						setProperty({ key: "TableDataString", value: WebCC.Properties.TableDataString });
+						
+						
+						// Subscribe for future value changes
+						WebCC.onPropertyChanged.subscribe(setProperty);
+					}
+				}
+				else {
+					console.log('connection failed');
+				}
+			},
+			// contract (same as manifest.json)
+			{
+				// Methods
+				methods: {
+					DrawTable: function(columnStyleString, tableDataString){
+						columnStyle_ = JSON.parse(columnStyleString);
+						tableData_ = JSON.parse(tableDataString);
+						drawTable(false);
+						columnStyle_ = null;
+						tableData_ = null;
+					}
+				},
+				// Events
+				events: [],
+				// Properties
+				properties: {
+					TableDataString: " ",
+					ColumnStyleString: " "
+				}
+			},
+			// placeholder to include additional Unified dependencies (not used in this example)
+			[],
+			// connection timeout
+			10000
+		);
+
+		function setProperty(data) {
+			switch (data.key) {
+				case "TableDataString":
+					if (data.value) {
+						ArrayData = JSON.parse(data.value);
+						drawTable(true);
+					} else { //workaround to overwrite the static value again on page reload
+						//WebCC.Properties.TableDataString = JSON.stringify(ArrayData);
+					}
+					break;
+			}
+		}
+
+		function drawTable(triggeredByTag) {
+			if (!triggeredByTag) {
+				var tabledata = tableData_;
+				var columnStyle = columnStyle_;
+			}
+			else
+			{
+				var tabledata = ArrayData;
+				var columnStyle = JSON.parse(WebCC.Properties.ColumnStyleString);
+			}
+			//choose how the table should look like or behave. More information on http://tabulator.info/
+			var table = new Tabulator("#example-table", {
+				height: 'calc(100% - 2px)', // set height of table to 100% minus 2 px, because the border of the table is 1px top and border
+				data: tabledata, //load initial data into table
+				layout: "fitColumns", //fit columns to width of table (optional)
+				columns: columnStyle,
+			});
+		}
+
+
+	</script>
+
+</body>
+
+</html>

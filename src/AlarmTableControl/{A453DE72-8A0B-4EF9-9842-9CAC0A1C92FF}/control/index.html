@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang='en' style="height: 100%;">
+
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+	<script src='webcc.min.js'></script> <!-- mandatory dependency -->
+	<!--Tabulator-->
+	<script type="text/javascript" src="./dist/js/tabulator.min.js"></script>
+	<link href="./dist/css/tabulator.css" rel="stylesheet">
+
+
+	<script src='./webcc.min.js'></script> <!-- mandatory dependency -->
+
+
+</head>
+
+<body style="height: 100%; margin: 0;">
+	<div id="example-table"></div>
+	<script>
+
+		const columnStyle = [
+			{ title: 'Alarm name', field: 'name', sorter: 'string' },
+			{ title: 'Event text', field: 'text', sorter: 'string' },
+			{ title: 'Alarm state', field: 'state', sorter: 'number' },
+			{
+				title: '', field: 'ack', cellClick: (e, cell) => {
+					const alarmName = cell._cell.row.cells[0].value;
+					console.log('AcknowledgeAlarm ' + alarmName);
+					WebCC.Events.fire('AcknowledgeAlarm', alarmName);
+				}
+			}
+		];
+		const initTableData = [];
+		let table;
+
+		////////////////////////////////////////////
+		// Initialize the custom control (without a successful initialization, the CWC will remain empty. Make sure to include the webcc.min.js script!)
+		WebCC.start(
+			// callback function; occurs when the connection is done or failed. 
+			// "result" is a boolean defining if the connection was successfull or not.
+			function (result) {
+				if (result) {
+					if (WebCC.isDesignMode) {
+						initTableData.push({ name: 'name1', text: 'foo', state: 2, ack: 'Ack' });
+					}
+					else {
+						console.log('connected successfully');
+					}
+					drawTable();
+				}
+				else {
+					console.log('connection failed');
+				}
+			},
+			// contract (same as manifest.json)
+			{
+				// Methods
+				methods: {
+					AlarmRaised: function (id, name, text, state) {
+						const rows = table ? table.searchRows('name', '=', name) : initTableData;
+						switch (state) {
+							case 0x01: // Raised - Incoming
+							case 0x02: // RaisedCleared - Incoming and Outgoing
+								console.log('Alarm incoming ' + name);
+								const newRow = { name: name, text: text, state: state, ack: 'Ack' };
+								if (table) {
+									if(rows.length == 0)
+										table.addRow(newRow);
+								} else
+									initTableData.push(newRow);
+								break;
+							case 0x00: // Normal (Idle) - Not an active alarm - also in case of outgoing
+							case 0x05: // RaisedAcknowledged - Incoming and acknowledged
+							case 0x06: // RaisedAcknowledgedCleared - Incoming, acknowledged and outgoing
+							case 0x07: // RaisedClearedAcknowledged - Incoming, outgoing and acknowledged
+							case 0x80: // Removed - Alarm was removed and is no longer available
+								console.log('Alarm outgoing ' + name);
+								if (table && rows.length > 0)
+									rows[0].delete();
+								break;
+						}
+					}
+				},
+				// Events
+				events: ['AcknowledgeAlarm'],
+				// Properties
+				properties: {}
+			},
+			// placeholder to include additional Unified dependencies (not used in this example)
+			[],
+			// connection timeout
+			10000
+		);
+
+		function drawTable() {
+			//choose how the table should look like or behave. More information on http://tabulator.info/
+			table = new Tabulator("#example-table", {
+				height: 'calc(100% - 2px)', // set height of table to 100% minus 2 px, because the border of the table is 1px top and border
+				data: initTableData, //load initial data into table
+				layout: "fitColumns", //fit columns to width of table (optional)
+				columns: columnStyle,
+			});
+		}
+
+
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+Deutsche Version:
+Workaround für Panel bezüglich String Länge.
+
+Problem: Am Panel können Strings nur eine Länge von 255 haben.
+
+Lösung: Es gibt jetzt die Möglichkeit, einen Methodenaufruf aus dem CustomWebControl heraus auszuführen. Hier kann der String direkt übergeben werden. Die Funktion zeichnet dann eine Tabelle auf Basis der Übergabewerte.
+
+Achtung: Die Methode setzt nicht die Werte der Tags (ColumnStyleString und TableDataString). Diese Methode dient nur dazu, auch auf dem Panel größere Tabellen anzuzeigen.
+
+Beispiel: Screen.Items("My table CustomWebControl_2").DrawTable("[{\"title\":\"Name\", \"field\":\"name\", \"sorter\":\"string\", \"width\":150},{\"title\":\"Salary\", \"field\":\"salary\", \"sorter\":\"number\", \"hozAlign\":\"left\"}]","[{\"name\":\"Donald\",\"salary\":\"2000\"}]");
+
+
+English version:
+Workaround for panel regarding the string length
+
+Problem: Strings can only have a length of 255 on the panel.
+
+Solution: There is now the option of calling a method from the CustomWebControl. The string can be passed directly here. The function then draws a table based on the passed paramters.
+
+NOTE: The method does not set the values ​​of the tags (ColumnStyleString and TableDataString). This method is only used to display larger tables on the panel.
+
+Example:Screen.Items("My table CustomWebControl_2").DrawTable("[{\"title\":\"Name\", \"field\":\"name\", \"sorter\":\"string\", \"width\":150},{\"title\":\"Salary\", \"field\":\"salary\", \"sorter\":\"number\", \"hozAlign\":\"left\"}]","[{\"name\":\"Donald\",\"salary\":\"2000\"}]");
